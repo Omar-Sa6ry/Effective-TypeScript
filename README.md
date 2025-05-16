@@ -307,3 +307,265 @@ type ReadonlyUser = Readonly<User>;
 
 ### Best Practices:
 - ✔ Use `Partial`, `Required`, `Pick` for common cases.
+
+Item 19: Avoid Cluttering Your Code with Inferable Types
+TypeScript can infer types in many cases, so you don't need to explicitly annotate them.
+
+Example:
+
+typescript
+// Unnecessary type annotation
+const x: number = 12;
+
+// Better - TypeScript infers the type
+const x = 12;
+Details:
+
+TypeScript can infer types for:
+
+Variables initialized when declared
+
+Default function parameters
+
+Function return types (unless you want specific documentation)
+
+Exceptions where you should annotate:
+
+Object literals (to catch excess properties)
+
+Function parameters (for public APIs)
+
+Where the type isn't immediately obvious
+
+Item 20: Use Different Variables for Different Types
+Variables should generally represent a single type throughout their lifetime.
+
+Example:
+
+typescript
+// Bad - id changes type
+let id = "123";
+id = 123;  // Error (good!)
+
+// Better - separate variables
+const id = "123";
+const numericId = 123;
+Details:
+
+TypeScript will infer a union type if a variable is reassigned
+
+Using separate variables makes your code:
+
+More readable
+
+Easier to refactor
+
+Less prone to errors
+
+Consider using const instead of let when possible to prevent accidental type changes
+
+Item 21: Understand Type Widening
+TypeScript "widens" types during inference, which can lead to unexpected behavior.
+
+Example:
+
+typescript
+const mixed = ['x', 1];  // Type is (string | number)[]
+const tuple = ['x', 1] as const;  // Type is readonly ["x", 1]
+Details:
+
+Type widening happens with:
+
+let variables
+
+Non-const object/array literals
+
+Function parameters
+
+Control widening with:
+
+const assertions (as const)
+
+Explicit type annotations
+
+const declarations instead of let
+
+Item 22: Understand Type Narrowing
+TypeScript can narrow types based on control flow analysis.
+
+Example:
+
+typescript
+function printValue(val: string | number) {
+  if (typeof val === 'string') {
+    console.log(val.toUpperCase());  // val is string here
+  } else {
+    console.log(val.toFixed(2));  // val is number here
+  }
+}
+Details:
+
+Common narrowing techniques:
+
+typeof checks
+
+instanceof checks
+
+Property presence checks ('prop' in obj)
+
+Built-in predicates like Array.isArray()
+
+Tagged unions/discriminated unions
+
+Custom type guards
+
+Narrowing works particularly well with immutable data structures
+
+Item 23: Create Objects All at Once
+TypeScript's type system works best when objects are created in a single step.
+
+Example:
+
+typescript
+// Bad - incremental building
+const pt = {};
+pt.x = 3;  // Error - x doesn't exist on {}
+
+// Good - build all at once
+const pt = {
+  x: 3,
+  y: 4
+};
+Details:
+
+TypeScript performs excess property checking only on object literals
+
+When building incrementally, you might need type assertions which weaken type safety
+
+If you must build incrementally, consider:
+
+Using object spread ({...a, ...b})
+
+Using a temporary variable
+
+Type assertions (as a last resort)
+
+Item 24: Be Consistent in Your Use of Aliases
+Aliasing can confuse TypeScript's type narrowing.
+
+Example:
+
+typescript
+const polygon = { type: 'rectangle', width: 10, height: 20 };
+const alias = polygon;
+
+if (polygon.type === 'rectangle') {
+  console.log(alias.width);  // OK - TypeScript tracks the alias
+}
+Details:
+
+TypeScript tracks aliases reasonably well in simple cases
+
+Problems can occur with:
+
+Function calls that might modify the object
+
+Destructuring that creates new variables
+
+Solutions:
+
+Use const for aliases
+
+Destructure all at once if using destructuring
+
+Be careful with function calls that might mutate objects
+
+Item 25: Use async Functions Instead of Callbacks for Asynchronous Code
+async/await provides better type safety and readability than callbacks.
+
+Example:
+
+typescript
+// Old-style callbacks
+function fetchData(callback: (data: string) => void) {
+  // ...
+}
+
+// Modern async/await
+async function fetchData(): Promise<string> {
+  // ...
+  return data;
+}
+Details:
+
+Benefits of async/await:
+
+Types flow naturally through the code
+
+Error handling is simpler (try/catch)
+
+Avoids "callback hell"
+
+Works well with Promise-returning APIs
+
+TypeScript provides excellent support for:
+
+Promise types
+
+async function return types
+
+Error types in catch blocks
+
+Item 26: Understand How Context Is Used in Type Inference
+Contextual typing occurs when TypeScript uses the expected type to influence inference.
+
+Example:
+
+typescript
+// Contextual typing with event handlers
+document.addEventListener('click', (e) => {
+  console.log(e.clientX);  // e is inferred as MouseEvent
+});
+Details:
+
+Contextual typing happens in:
+
+Function arguments
+
+Object literals assigned to typed variables
+
+Array literals assigned to typed arrays
+
+Return statements
+
+Can be helpful but sometimes needs to be overridden with type annotations
+
+Particularly useful with library function callbacks
+
+Item 27: Use Functional Constructs and Libraries to Help Types Flow
+Functional programming constructs often work better with TypeScript's type system.
+
+Example:
+
+typescript
+const numbers = [1, 2, 3];
+const doubled = numbers.map(n => n * 2);  // Type is number[]
+
+// Versus imperative style:
+const doubled = [];
+for (const n of numbers) {
+  doubled.push(n * 2);  // Requires more type annotations
+}
+Details:
+
+Benefits of functional style:
+
+Types flow naturally through operations
+
+Less need for mutable variables
+
+Built-in methods like map, filter, reduce have excellent type support
+
+Libraries like Lodash fp or Ramda work well with TypeScript
+
+Avoid mutating operations which can complicate type inference
