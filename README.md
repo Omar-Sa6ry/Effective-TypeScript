@@ -780,6 +780,136 @@ type Adder = ReturnType<typeof makeAdder>; // (y: number) => number
 
 
 
+
+# Chapter 6: Generics and Type-Level Programming
+
+---
+
+## Item 50: Think of Generics as Functions Between Types
+
+Generics behave like functions operating on types.
+
+```ts
+type Box<T> = { value: T };
+type StringBox = Box<string>; // { value: string }
+```
+
+---
+
+## Item 51: Avoid Unnecessary Type Parameters
+
+Simplify your types by avoiding unused generic parameters.
+
+Bad:
+```ts
+function identity<T>(arg: T): T {
+  return arg;
+}
+```
+
+Better (when T is always number):
+```ts
+function identity(arg: number): number {
+  return arg;
+}
+```
+
+---
+
+## Item 52: Prefer Conditional Types to Overload Signatures
+
+Use conditional types to reduce overload complexity.
+
+```ts
+type ElementType<T> = T extends (infer U)[] ? U : T;
+
+type A = ElementType<string[]>; // string
+type B = ElementType<number>;   // number
+```
+
+---
+
+## Item 53: Know How to Control the Distribution of Unions over Conditional Types
+
+Conditional types distribute over unions:
+
+```ts
+type ToArray<T> = T extends any ? T[] : never;
+type A = ToArray<string | number>; // string[] | number[]
+```
+
+Prevent distribution using a tuple:
+
+```ts
+type ToArrayNonDist<T> = [T] extends [any] ? T[] : never;
+type B = ToArrayNonDist<string | number>; // (string | number)[]
+```
+
+---
+
+## Item 54: Use Template Literal Types to Model DSLs and Relationships Between Strings
+
+Create string patterns with template literals:
+
+```ts
+type EventName = `on${Capitalize<string>}`;
+```
+
+---
+
+## Item 55: Write Tests for Your Types
+
+Assert type correctness with helper utilities:
+
+```ts
+type Assert<T extends true> = T;
+type IsString<T> = T extends string ? true : false;
+
+type Test = Assert<IsString<'hello'>>; // Passes
+type Fail = Assert<IsString<42>>;      // Error
+```
+
+---
+
+## Item 56: Pay Attention to How Types Display
+
+Simplify complex types for readability:
+
+```ts
+type Simplify<T> = { [K in keyof T]: T[K] };
+```
+
+---
+
+## Item 57: Prefer Tail-Recursive Generic Types
+
+Avoid compiler limits by using tail recursion:
+
+```ts
+type Flatten<T, Acc extends any[] = []> = T extends [infer Head, ...infer Tail]
+  ? Flatten<Tail, [...Acc, Head]>
+  : Acc;
+```
+
+---
+
+## Item 58: Consider Code Generation as an Alternative to Complex Types
+
+When types are overly complex, automate their generation with code to reduce errors and improve maintainability.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
 # Chapter 7: Writing and Running Your Code
 
 ---
