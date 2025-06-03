@@ -766,3 +766,200 @@ type Adder = ReturnType<typeof makeAdder>; // (y: number) => number
 | Utility Types (`Record`, `Array`) | Clearer and more expressive than raw object types |
 | `Partial`, `Pick`, `Omit` | Avoid duplication when transforming types |
 | `ReturnType` | Reuse function types without retyping |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Chapter 7: Writing and Running Your Code
+
+---
+
+## Item 72: Prefer ECMAScript Features to TypeScript Features
+
+TypeScript has introduced features like enums, parameter properties, and namespaces. However, many of these have been adopted or superseded by ECMAScript standards. It's advisable to use standard ECMAScript features when possible for better compatibility and clarity.
+
+### Examples
+
+- **Enums**
+
+  Instead of using TypeScript enums:
+
+  ```typescript
+  enum Direction {
+    Up,
+    Down,
+    Left,
+    Right
+  }
+  ```
+
+  Prefer union types:
+
+  ```typescript
+  type Direction = 'Up' | 'Down' | 'Left' | 'Right';
+  ```
+
+- **Parameter Properties**
+
+  Instead of:
+
+  ```typescript
+  class Point {
+    constructor(public x: number, public y: number) {}
+  }
+  ```
+
+  Prefer explicit property declarations:
+
+  ```typescript
+  class Point {
+    public x: number;
+    public y: number;
+
+    constructor(x: number, y: number) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+  ```
+
+- **Namespaces and Triple-Slash Imports**
+
+  Avoid using namespaces and triple-slash directives (`/// <reference path="..." />`). Instead, use ES6 module syntax:
+
+  ```typescript
+  import { MyModule } from './my-module';
+  ```
+
+- **Decorators**
+
+  Decorators are still experimental and not part of the ECMAScript standard. Use them cautiously and only when necessary, such as in frameworks like Angular.
+
+---
+
+## Item 73: Use Source Maps to Debug TypeScript
+
+Source maps allow developers to debug TypeScript code directly in browsers by mapping the compiled JavaScript back to the original TypeScript source.
+
+Make sure source maps are enabled in your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "sourceMap": true
+  }
+}
+```
+
+This lets you set breakpoints and inspect variables in your TypeScript code during runtime, making debugging easier.
+
+---
+
+## Item 74: Know How to Reconstruct Types at Runtime
+
+TypeScript's type system is erased during compilation, so types are not available at runtime.
+
+To perform type checks at runtime, use JavaScript constructs like `typeof` and `instanceof`, or implement custom type guards.
+
+### Example:
+
+```typescript
+function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+const value: unknown = 'hello';
+if (isString(value)) {
+  // TypeScript now knows 'value' is a string
+  console.log(value.toUpperCase());
+}
+```
+
+---
+
+## Item 75: Understand the DOM Hierarchy
+
+When working with the DOM, understand the hierarchy of interfaces TypeScript provides.
+
+For example, `HTMLElement` is a superclass for specific element types like `HTMLDivElement` or `HTMLInputElement`.
+
+### Example:
+
+```typescript
+const input = document.querySelector('input');
+if (input instanceof HTMLInputElement) {
+  input.value = 'Hello';
+}
+```
+
+Using `instanceof` ensures TypeScript knows the specific type of the DOM element, allowing access to its properties.
+
+---
+
+## Item 76: Create an Accurate Model of Your Environment
+
+TypeScript relies on type declarations to understand the shape of objects and APIs.
+
+When working with environments like Node.js or browser APIs, ensure you include the appropriate type declarations.
+
+For example, install type definitions for Node.js:
+
+```bash
+npm install --save-dev @types/node
+```
+
+This helps TypeScript provide accurate type checking and IntelliSense.
+
+---
+
+## Item 77: Understand the Relationship Between Type Checking and Unit Testing
+
+TypeScript's type system helps catch many errors at compile time but doesn't eliminate the need for unit testing.
+
+Types ensure functions are used correctly but don't verify that functions produce correct results.
+
+### Example:
+
+```typescript
+function add(a: number, b: number): number {
+  return a - b; // Oops, should be a + b
+}
+```
+
+TypeScript won't catch this logical error because the types are correct. Unit tests are necessary to validate function behavior.
+
+---
+
+## Item 78: Pay Attention to Compiler Performance
+
+As TypeScript projects grow, compilation times can increase.
+
+To maintain performance:
+
+- Use the `incremental` compiler option to enable faster subsequent builds:
+
+  ```json
+  {
+    "compilerOptions": {
+      "incremental": true
+    }
+  }
+  ```
+
+- Exclude unnecessary files from compilation using the `exclude` option in `tsconfig.json`.
+
+- Consider using project references for large codebases to enable faster builds and better organization.
+
+---
+
+
