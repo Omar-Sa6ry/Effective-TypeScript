@@ -778,6 +778,165 @@ type Adder = ReturnType<typeof makeAdder>; // (y: number) => number
 
 
 
+# Chapter 5 – Working with `any`, `unknown`, and `never`
+
+---
+
+### 🔹 Item 43: Prefer `unknown` to `any`
+
+**Summary**:  
+If you must use a top type (a type that can hold any value), prefer `unknown` over `any`. `unknown` forces you to do some type checking before operating on the value, providing more safety than `any`.
+
+✅ **Good**:
+```ts
+function parseJson(jsonStr: string): unknown {
+  return JSON.parse(jsonStr);
+}
+
+const result = parseJson('{"name": "Omar"}');
+if (typeof result === 'object' && result !== null && 'name' in result) {
+  console.log((result as { name: string }).name);
+}
+```
+
+❌ **Bad**:
+```ts
+function parseJsonUnsafe(jsonStr: string): any {
+  return JSON.parse(jsonStr);
+}
+
+const user = parseJsonUnsafe('{"name": "Omar"}');
+console.log(user.toUpperCase()); // Runtime error if user is not a string!
+```
+
+🧠 **Takeaway**: `unknown` encourages safer code than `any`.
+
+---
+
+### 🔹 Item 44: Understand the differences between `unknown` and `any`
+
+**Summary**:  
+`unknown` is safer: it requires type narrowing or assertions before usage. `any` disables type checking completely.
+
+Example:
+```ts
+let valueAny: any = "hello";
+let valueUnknown: unknown = "hello";
+
+console.log(valueAny.trim());       // OK, but might crash
+// console.log(valueUnknown.trim()); // ❌ Error
+
+if (typeof valueUnknown === 'string') {
+  console.log(valueUnknown.trim()); // ✅ Safe
+}
+```
+
+🧠 **Takeaway**: Use `unknown` to preserve type safety with dynamic values.
+
+---
+
+### 🔹 Item 45: Prefer more precise variants of `any` when possible
+
+**Summary**:  
+When you need a flexible type, try using:
+- `unknown`
+- `object`
+- `Record<string, unknown>`
+- Custom types
+
+Example:
+
+❌ **Too generic**:
+```ts
+function handleInput(input: any) {
+  // unsafe
+}
+```
+
+✅ **Better**:
+```ts
+function handleInput(input: Record<string, unknown>) {
+  if (typeof input.name === 'string') {
+    console.log(input.name.toUpperCase());
+  }
+}
+```
+
+🧠 **Takeaway**: Use more descriptive types instead of `any`.
+
+---
+
+### 🔹 Item 46: Understand that `any` erases type safety
+
+**Summary**:  
+Using `any` silences all type errors — even obvious ones.
+
+Example:
+```ts
+function unsafeAdd(a: any, b: any): any {
+  return a + b;
+}
+
+unsafeAdd(1, 2); // OK
+unsafeAdd('a', 2); // OK (but probably wrong)
+unsafeAdd({}, []); // OK (but meaningless)
+```
+
+🧠 **Takeaway**: `any` should be your last resort.
+
+---
+
+### 🔹 Item 47: Use `never` for exhaustive checks
+
+**Summary**:  
+`never` represents a value that should never occur. It’s useful in exhaustive `switch` statements.
+
+Example:
+```ts
+type Shape = { kind: 'circle', radius: number } | { kind: 'square', size: number };
+
+function getArea(shape: Shape): number {
+  switch (shape.kind) {
+    case 'circle': return Math.PI * shape.radius ** 2;
+    case 'square': return shape.size ** 2;
+    default:
+      const _exhaustive: never = shape;
+      return _exhaustive;
+  }
+}
+```
+
+🧠 **Takeaway**: Use `never` to make your code future-proof.
+
+---
+
+### 🔹 Item 48: Recognize that some uses of `never` are error-prone
+
+**Summary**:  
+Beware of using `never` in type aliases or utility types incorrectly — it can lead to surprising behavior.
+
+Example:
+```ts
+type Keys = 'a' | 'b';
+type Filter<T> = T extends 'a' ? never : T;
+
+type Result = Filter<Keys>; // Result is 'b'
+
+type ArrayFilter<T> = T extends 'a' ? never : T;
+type Filtered = ArrayFilter<Keys>; // 'b'
+type FilteredArray = Array<Filtered>; // Array<'b'>
+```
+
+
+---
+
+
+
+
+
+
+
+
 
 
 
