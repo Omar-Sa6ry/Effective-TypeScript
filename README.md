@@ -1069,6 +1069,15 @@ When types are overly complex, automate their generation with code to reduce err
 
 
 
+
+
+
+
+
+
+
+
+
 # Chapter 7: Writing and Running Your Code
 
 ---
@@ -1250,5 +1259,146 @@ To maintain performance:
 - Consider using project references for large codebases to enable faster builds and better organization.
 
 ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Chapter 8: Type Declarations and @types
+
+## Item 65: Put TypeScript and `@types` in `devDependencies`
+
+Since TypeScript and its type definitions are used during development and not at runtime, they should be listed under `devDependencies` in your `package.json`.
+
+```json
+{
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/lodash": "^4.14.195"
+  }
+}
+```
+
+---
+
+## Item 66: Understand the Three Versions Involved in Type Declarations
+
+Be aware of three version numbers:
+1. **Library version**: The JavaScript library version.
+2. **`@types` version**: The type definitions version.
+3. **TypeScript version**: The compiler version.
+
+Ensure compatibility among them to avoid errors.
+
+---
+
+## Item 67: Export All Types That Appear in Public APIs
+
+Types used in public interfaces should be exported.
+
+```ts
+// my-library.ts
+export interface Config {
+  url: string;
+  timeout: number;
+}
+
+export function initialize(config: Config): void {
+  // implementation
+}
+```
+
+---
+
+## Item 68: Use TSDoc for API Comments
+
+Use TSDoc to document your APIs for IDEs and documentation tools.
+
+```ts
+/**
+ * Initializes the application with the given configuration.
+ *
+ * @param config - The configuration object.
+ */
+export function initialize(config: Config): void {
+  // implementation
+}
+```
+
+---
+
+## Item 69: Provide a Type for `this` in Callbacks if It's Part of Their API
+
+Explicitly type `this` in callbacks for clarity.
+
+```ts
+interface Handler {
+  handle(this: HTMLButtonElement, event: MouseEvent): void;
+}
+
+const handler: Handler = {
+  handle(this: HTMLButtonElement, event: MouseEvent) {
+    console.log(this.id);
+  }
+};
+```
+
+---
+
+## Item 70: Mirror Types to Sever Dependencies
+
+Create mirrored types to reduce coupling between modules.
+
+```ts
+// External module
+export interface ExternalConfig {
+  url: string;
+  timeout: number;
+}
+
+// Your module
+interface LocalConfig {
+  url: string;
+  timeout: number;
+}
+```
+
+---
+
+## Item 71: Use Module Augmentation to Improve Types
+
+Use module augmentation to extend existing types.
+
+```ts
+// augmentations.d.ts
+import 'express';
+
+declare module 'express' {
+  interface Request {
+    user?: { id: string; name: string };
+  }
+}
+```
+
+---
+
 
 
