@@ -1402,3 +1402,129 @@ declare module 'express' {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Chapter 9: Writing and Running Your Code
+
+This chapter contains practical tips for using TypeScript effectively in a real-world development workflow.
+
+---
+
+## 🧩 Item 72: Prefer ECMAScript Features to TypeScript Features
+
+- Prefer native ECMAScript features that work at runtime.
+- Avoid TypeScript-only constructs like `enum` or namespaces when alternatives exist.
+
+**Example:** Prefer using parameter properties:
+
+```ts
+class Person {
+  constructor(private name: string) {}
+}
+```
+
+---
+
+## 🔍 Item 73: Use Source Maps to Debug TypeScript
+
+- Enable `sourceMap: true` in `tsconfig.json`.
+- Allows setting breakpoints and stepping through TS code in browser dev tools or editors.
+
+**Example:** Chrome DevTools will map `bundle.js:1050` back to `app.ts:42`.
+
+---
+
+## 🛠 Item 74: Know How to Reconstruct Types at Runtime
+
+- TypeScript types are erased at runtime.
+- Use tools like Zod or code generation to retain type info at runtime.
+
+**Example with Zod:**
+
+```ts
+const Comment = z.object({
+  postId: z.string(),
+  title: z.string(),
+  body: z.string(),
+});
+type CreateComment = z.infer<typeof Comment>;
+```
+
+---
+
+## 🌳 Item 75: Understand the DOM Hierarchy
+
+- DOM types in TypeScript mirror browser APIs.
+- Know the difference between `Element`, `HTMLElement`, `HTMLDivElement`, etc.
+
+**Example:**
+
+```ts
+const el = document.getElementById('log'); // HTMLElement | null
+```
+
+---
+
+## ⚙️ Item 76: Create an Accurate Model of Your Environment
+
+- Declare global variables manually if needed.
+- Set proper `lib` in `tsconfig.json` to reflect your runtime (e.g., `dom`, `es2020`).
+
+**Example:**
+
+```ts
+declare global {
+  interface Window {
+    MyAppConfig: { apiUrl: string; debug: boolean; };
+  }
+}
+```
+
+---
+
+## 🧪 Item 77: Understand the Relationship between Type Checking and Unit Testing
+
+- Type checking handles structural bugs.
+- Unit tests verify runtime behavior.
+- Don't duplicate type-check logic in tests.
+
+---
+
+## ⚡ Item 78: Pay Attention to Compiler Performance
+
+- Use `incremental`, `composite`, `tsc --watch` for speed.
+- Split code using Project References.
+- Avoid overly complex recursive or deep types.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
