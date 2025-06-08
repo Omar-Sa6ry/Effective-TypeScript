@@ -1,10 +1,10 @@
-# Chapter 1 Summary: Getting to Know TypeScript
+# Chapter 1 Getting to Know TypeScript
 
 This chapter helps you understand the core mechanics of TypeScript, including how its type system works and how it differs from JavaScript.
 
 ---
 
-## ✅ Item 1: Understand the Differences Between TypeScript and JavaScript
+## Item 1: Understand the Differences Between TypeScript and JavaScript
 
 ### Guideline:
 TypeScript is a **superset** of JavaScript that adds types, but types are erased at runtime. TypeScript types exist only at compile time to catch errors early.
@@ -23,7 +23,7 @@ Always remember that TypeScript doesn't enforce types at runtime. You need to ad
 
 ---
 
-## ✅ Item 2: Know Which TypeScript Options You’re Using
+## Item 2: Know Which TypeScript Options You’re Using
 
 ### Guideline:
 Compiler options (`tsconfig.json`) greatly affect TypeScript's behavior. Important options:
@@ -46,7 +46,7 @@ Compiler options (`tsconfig.json`) greatly affect TypeScript's behavior. Importa
 
 ---
 
-## ✅ Item 3: Understand That Code Generation is Independent of Types
+## Item 3: Understand That Code Generation is Independent of Types
 
 ### Guideline:
 TypeScript compiles to JavaScript **regardless of type errors**. It does not block compilation when errors exist (unless you're using `noEmitOnError`).
@@ -67,7 +67,7 @@ const age: number = "not a number"; // Error
 
 ---
 
-## ✅ Item 4: Get Comfortable with Structural Typing
+## Item 4: Get Comfortable with Structural Typing
 
 ### Guideline:
 TypeScript uses **structural typing**, not nominal typing. Types are compatible if their shapes match.
@@ -89,7 +89,7 @@ logPoint(pointLike); // ✅ Allowed: extra properties are okay
 
 ---
 
-## ✅ Item 5: Limit Use of the `any` Type
+## Item 5: Limit Use of the `any` Type
 
 ### Guideline:
 Avoid `any` unless you have no alternative. It removes all type safety.
@@ -112,7 +112,7 @@ function log(value: unknown) {
 
 ---
 
-## ✅ Item 6: Use `unknown` Instead of `any` for Safer Input Handling
+## Item 6: Use `unknown` Instead of `any` for Safer Input Handling
 
 ### Guideline:
 Prefer `unknown` when accepting values of arbitrary types. You must **narrow** `unknown` before use.
@@ -128,7 +128,7 @@ function handleInput(input: unknown) {
 
 ---
 
-## ✅ Item 7: Think of Types as Sets of Values
+## Item 7: Think of Types as Sets of Values
 
 ### Guideline:
 You can think of types like mathematical sets. `string` is a set of all strings; `"hello"` is a subset.
@@ -461,13 +461,19 @@ Where the type isn't immediately obvious
 
 
 
-# Chapter 3 Summary: Type Design
+
+
+
+
+
+
+# Chapter 3 Type Design
 
 This chapter helps you design better types—types that are flexible, safe, and expressive.
 
 ---
 
-## ✅ Item 20: Use Different Variables for Different Types
+## Item 20: Use Different Variables for Different Types
 
 ### Guideline:
 Don’t overload a single variable with values of different types. Instead, use **distinct variables** to keep types precise.
@@ -486,7 +492,7 @@ const orderId: number = 123;
 
 ---
 
-## ✅ Item 21: Use `object` and `Record<string, unknown>` for Loose Types
+## Item 21: Use `object` and `Record<string, unknown>` for Loose Types
 
 ### Guideline:
 Avoid using `{}` or `any` when working with general object values.
@@ -516,7 +522,7 @@ function handle(data: object) {
 
 ---
 
-## ✅ Item 22: Use `unknown` for Values with Unknown Types
+## Item 22: Use `unknown` for Values with Unknown Types
 
 ### Guideline:
 Prefer `unknown` over `any` when you don’t know the type yet.
@@ -539,7 +545,7 @@ function logLength(input: unknown) {
 
 ---
 
-## ✅ Item 23: Create Nested Types When Needed
+## Item 23: Create Nested Types When Needed
 
 ### Guideline:
 Don't flatten complex types. Use **nested structures** to make relationships clearer.
@@ -557,7 +563,7 @@ interface User {
 
 ---
 
-## ✅ Item 24: Be Consistent in Your Use of Types
+## Item 24: Be Consistent in Your Use of Types
 
 ### Guideline:
 Pick one form (e.g., `interface` or `type`, `string[]` or `Array<string>`) and **stick to it** for consistency.
@@ -580,7 +586,7 @@ interface User {
 
 ---
 
-## ✅ Item 25: Prefer `readonly` for Immutable Data
+## Item 25: Prefer `readonly` for Immutable Data
 
 ### Guideline:
 Use `readonly` to prevent mutations and clearly express intent.
@@ -600,7 +606,7 @@ const nums: readonly number[] = [1, 2, 3];
 
 ---
 
-## ✅ Item 26: Use `readonly` to Document Immutability
+## Item 26: Use `readonly` to Document Immutability
 
 ### Guideline:
 `readonly` communicates that a value shouldn't change.
@@ -614,7 +620,7 @@ function printConfig(config: Readonly<Config>) {
 
 ---
 
-## ✅ Item 27: Use Enums Judiciously
+## Item 27: Use Enums Judiciously
 
 ### Guideline:
 Use `enums` only when necessary. Prefer `union types` for simpler cases.
@@ -637,13 +643,13 @@ type Status = "success" | "failure";
 
 
 
-# Chapter 4 Summary
+# Chapter 4 
 
 This chapter focuses on writing TypeScript code that is **readable**, **maintainable**, and **clear** for other developers.
 
 ---
 
-## ✅ Item 28: Prefer Types That Always Represent Valid States
+## Item 28: Prefer Types That Always Represent Valid States
 
 ### ❌ Problematic Example
 ```ts
@@ -671,7 +677,7 @@ Now, TypeScript ensures that the user has *either* an email *or* a phone number 
 
 ---
 
-## ✅ Item 29: Be Precise with Tuple Types
+## Item 29: Be Precise with Tuple Types
 
 Use **tuples** when the length and types of elements are fixed and meaningful by position.
 
@@ -691,7 +697,7 @@ function distance(p1: number[], p2: number[]) { ... }
 
 ---
 
-## ✅ Item 30: Use `readonly` to Avoid Mutating State
+## Item 30: Use `readonly` to Avoid Mutating State
 
 ### ❌ Mutable Example
 ```ts
@@ -709,7 +715,7 @@ function freezePoint(p: readonly [number, number]) {
 
 ---
 
-## ✅ Item 31: Prefer `Array` and `Record` over Object Type Literals
+## Item 31: Prefer `Array` and `Record` over Object Type Literals
 
 ### ✅ Clearer with Utility Types
 ```ts
@@ -723,7 +729,7 @@ type Scores = { [key: string]: number };
 
 ---
 
-## ✅ Item 32: Prefer `Partial`, `Pick`, and `Omit` to Writing Object Types from Scratch
+## Item 32: Prefer `Partial`, `Pick`, and `Omit` to Writing Object Types from Scratch
 
 ```ts
 interface User {
@@ -744,7 +750,7 @@ type UserWithoutEmail = Omit<User, 'email'>;
 
 ---
 
-## ✅ Item 33: Use `ReturnType` to Type Functions That Return Functions
+## Item 33: Use `ReturnType` to Type Functions That Return Functions
 
 ```ts
 function makeAdder(x: number) {
@@ -756,7 +762,6 @@ type Adder = ReturnType<typeof makeAdder>; // (y: number) => number
 
 ---
 
-## Summary of Chapter 4 Principles
 
 | Concept | Key Idea |
 |--------|----------|
@@ -784,7 +789,7 @@ type Adder = ReturnType<typeof makeAdder>; // (y: number) => number
 
 ### 🔹 Item 43: Prefer `unknown` to `any`
 
-**Summary**:  
+****:  
 If you must use a top type (a type that can hold any value), prefer `unknown` over `any`. `unknown` forces you to do some type checking before operating on the value, providing more safety than `any`.
 
 ✅ **Good**:
@@ -815,7 +820,7 @@ console.log(user.toUpperCase()); // Runtime error if user is not a string!
 
 ### 🔹 Item 44: Understand the differences between `unknown` and `any`
 
-**Summary**:  
+****:  
 `unknown` is safer: it requires type narrowing or assertions before usage. `any` disables type checking completely.
 
 Example:
@@ -837,7 +842,7 @@ if (typeof valueUnknown === 'string') {
 
 ### 🔹 Item 45: Prefer more precise variants of `any` when possible
 
-**Summary**:  
+****:  
 When you need a flexible type, try using:
 - `unknown`
 - `object`
@@ -868,7 +873,7 @@ function handleInput(input: Record<string, unknown>) {
 
 ### 🔹 Item 46: Understand that `any` erases type safety
 
-**Summary**:  
+****:  
 Using `any` silences all type errors — even obvious ones.
 
 Example:
@@ -888,7 +893,7 @@ unsafeAdd({}, []); // OK (but meaningless)
 
 ### 🔹 Item 47: Use `never` for exhaustive checks
 
-**Summary**:  
+****:  
 `never` represents a value that should never occur. It’s useful in exhaustive `switch` statements.
 
 Example:
@@ -912,7 +917,7 @@ function getArea(shape: Shape): number {
 
 ### 🔹 Item 48: Recognize that some uses of `never` are error-prone
 
-**Summary**:  
+****:  
 Beware of using `never` in type aliases or utility types incorrectly — it can lead to surprising behavior.
 
 Example:
