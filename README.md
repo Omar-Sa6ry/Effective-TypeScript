@@ -1528,3 +1528,136 @@ declare global {
 
 
 
+
+
+
+
+
+
+
+
+
+# Chapter 10: Modernization and Migration — Effective TypeScript 
+
+This chapter focuses on how to migrate JavaScript codebases to TypeScript in a safe, incremental, and modern way. Below are detailed explanations and examples for each of the five items in Chapter 10.
+
+---
+
+## Item 79: Write Modern JavaScript
+
+Before adding TypeScript, start by writing modern JavaScript. This makes your code cleaner and more compatible with TypeScript.
+
+**Recommendations:**
+- Use `import`/`export` instead of `require`/`module.exports`
+- Prefer `class` syntax
+- Use `let` and `const` instead of `var`
+- Use arrow functions, destructuring, template literals, and `async`/`await`
+
+**Example:**
+```js
+// ❌ Legacy JS
+const fs = require('fs');
+function Person(name) {
+  this.name = name;
+}
+Person.prototype.greet = function() {
+  console.log('Hi, ' + this.name);
+};
+
+// ✅ Modern JS
+import { readFile } from 'fs/promises';
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+  greet = () => console.log(`Hi, ${this.name}`);
+}
+```
+
+---
+
+## Item 80: Use `@ts-check` and JSDoc to Experiment with TypeScript
+
+Add `// @ts-check` at the top of JavaScript files and annotate types using JSDoc to get TypeScript-like error checking without renaming to `.ts`.
+
+**Benefits:**
+- No tooling change needed
+- Great way to try out TypeScript gradually
+
+**Example:**
+```js
+// @ts-check
+/**
+ * @param {string} name
+ * @returns {string}
+ */
+function greet(name) {
+  return 'Hello ' + name;
+}
+
+// ❌ Error: Argument of type 'number' is not assignable to parameter of type 'string'.
+greet(42);
+```
+
+---
+
+## Item 81: Use `allowJs` to Mix TypeScript and JavaScript
+
+Enable `allowJs: true` in `tsconfig.json` to mix `.js` and `.ts` files.
+
+**Example `tsconfig.json`:**
+```json
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"]
+}
+```
+
+This allows you to:
+- Gradually convert JS files to TS
+- Run type-checking in JS files using JSDoc
+
+---
+
+## Item 82: Convert Module by Module Up Your Dependency Graph
+
+Convert leaf modules (those that don't import other modules) to TypeScript first. Then gradually move up the graph.
+
+**Migration Strategy:**
+```
+utils.js → rename to utils.ts
+↓
+services.js → depends on utils → convert next
+↓
+controllers.js → depends on services → convert after
+```
+
+This minimizes breakage and keeps type errors contained.
+
+---
+
+## Item 83: Don't Consider Migration Complete Until You Enable `noImplicitAny`
+
+The final step of a full migration is enabling `noImplicitAny` in `tsconfig.json`.
+
+**Why it matters:**
+- Forces you to declare or infer all types
+- Prevents the silent spread of `any` types
+
+**Example `tsconfig.json`:**
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true
+  }
+}
+```
+
+After this, you can be confident that your codebase is fully type-safe.
+
+---
